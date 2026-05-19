@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        MeterFlow Logs
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css?v=5"
+    >
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo-box">
+            ⚡
+        </div>
+
+        <h1 class="logo">
+            MeterFlow
+        </h1>
+
+        <p class="subtitle">
+            API Analytics
+        </p>
+
+        <nav class="nav-links">
+
+            <a href="/dashboard">
+                📊 Overview
+            </a>
+
+            <a href="/api-keys">
+                🔑 API Keys
+            </a>
+
+            <a
+                href="/logs"
+                class="active"
+            >
+                📜 Logs
+            </a>
+
+            <a href="/billing">
+                💳 Billing
+            </a>
+
+            <a href="/logout">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <div class="top-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    API Logs
+                </h1>
+
+                <p class="page-subtitle">
+                    Monitor all API requests
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="section-card">
+
+            <h2 class="section-title">
+                Recent API Activity
+            </h2>
+
+            <p class="section-subtitle">
+                Latest authenticated requests
+            </p>
+
+
+            <table class="logs-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            API Key
+                        </th>
+
+                        <th>
+                            Endpoint
+                        </th>
+
+                        <th>
+                            Method
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Timestamp
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for log in logs %}
+
+                    <tr>
+
+                        <td>
+                            {{ log.api_key }}
+                        </td>
+
+                        <td>
+                            {{ log.endpoint }}
+                        </td>
+
+                        <td>
+                            {{ log.method }}
+                        </td>
+
+                        <td>
+
+                            {% if log.status_code == 200 %}
+
+                                <span class="status-success">
+                                    {{ log.status_code }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-failed">
+                                    {{ log.status_code }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ log.timestamp }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

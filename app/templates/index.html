@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="
+    min-height:100vh;
+    background:#020817;
+    color:white;
+">
+
+    <!-- NAVBAR -->
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:30px 60px;
+        border-bottom:1px solid rgba(255,255,255,0.05);
+    ">
+
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:14px;
+            font-size:34px;
+            font-weight:bold;
+        ">
+            ⚡ MeterFlow
+        </div>
+
+        <div style="
+            display:flex;
+            gap:20px;
+            align-items:center;
+        ">
+
+            <a href="/login" style="
+                color:white;
+                text-decoration:none;
+                font-size:18px;
+            ">
+                Sign in
+            </a>
+
+            <a href="/signup" style="
+                background:linear-gradient(to right,#3b82f6,#22d3ee);
+                padding:14px 24px;
+                border-radius:14px;
+                text-decoration:none;
+                color:white;
+                font-size:18px;
+            ">
+                Get started
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- HERO -->
+    <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        text-align:center;
+        padding:120px 20px;
+    ">
+
+        <!-- BADGE -->
+        <div style="
+            background:#111827;
+            border:1px solid rgba(255,255,255,0.08);
+            padding:10px 20px;
+            border-radius:999px;
+            margin-bottom:35px;
+            color:#cbd5e1;
+            font-size:18px;
+        ">
+            ● v1.0 — Now in beta
+        </div>
+
+        <!-- TITLE -->
+        <h1 style="
+            font-size:90px;
+            line-height:1.1;
+            max-width:1100px;
+            font-weight:800;
+            margin-bottom:30px;
+        ">
+            Meter, gate, and monetize your APIs.
+        </h1>
+
+        <!-- SUBTITLE -->
+        <p style="
+            font-size:32px;
+            color:#94a3b8;
+            max-width:1000px;
+            line-height:1.5;
+            margin-bottom:50px;
+        ">
+            Track usage, manage access, and generate bills — all in one place.
+        </p>
+
+        <!-- BUTTONS -->
+        <div style="
+            display:flex;
+            gap:20px;
+        ">
+
+            <a href="/signup" style="
+                background:linear-gradient(to right,#3b82f6,#22d3ee);
+                padding:18px 34px;
+                border-radius:16px;
+                text-decoration:none;
+                color:white;
+                font-size:22px;
+                font-weight:600;
+            ">
+                Get Started
+            </a>
+
+            <a href="/dashboard" style="
+                border:1px solid rgba(255,255,255,0.1);
+                padding:18px 34px;
+                border-radius:16px;
+                text-decoration:none;
+                color:white;
+                font-size:22px;
+                background:#111827;
+            ">
+                Open Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

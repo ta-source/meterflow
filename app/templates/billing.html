@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MeterFlow Billing</title>
+
+    <link rel="stylesheet"
+          href="/static/style.css?v=6">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo-box">
+            ⚡
+        </div>
+
+        <h1 class="logo">
+            MeterFlow
+        </h1>
+
+        <p class="subtitle">
+            API Analytics
+        </p>
+
+        <nav class="nav-links">
+
+            <a href="/dashboard">
+                📊 Overview
+            </a>
+
+            <a href="/api-keys">
+                🔑 API Keys
+            </a>
+
+            <a href="/logs">
+                📜 Logs
+            </a>
+
+            <a href="/billing"
+               class="active">
+                💳 Billing
+            </a>
+
+            <a href="/playground">
+                API Playground
+            </a>
+
+            <a href="/plans">
+                💎 Plans
+            </a>
+
+            <a href="/logout">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Billing Dashboard
+                </h1>
+
+                <p class="page-subtitle">
+                    Monitor API usage and subscription costs
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- BILLING TABLE -->
+
+        <div class="section-card">
+
+            <h2 class="section-title">
+                Billing Details
+            </h2>
+
+            <p class="section-subtitle">
+                API usage and subscription history
+            </p>
+
+            <table style="width:100%; margin-top:20px;">
+
+                <thead>
+
+                    <tr>
+
+                        <th>API Key</th>
+
+                        <th>Plan</th>
+
+                        <th>Total Requests</th>
+
+                        <th>Total Cost</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for bill in bills %}
+
+                    <tr>
+
+                        <td>
+                            {{ bill.api_key }}
+                        </td>
+
+                        <td>
+                            {{ bill.plan }}
+                        </td>
+
+                        <td>
+                            {{ bill.total_requests }}
+                        </td>
+
+                        <td>
+                            ₹{{ bill.total_cost }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- QUICK ACTION -->
+
+        <div class="section-card"
+             style="margin-top:40px;">
+
+            <h2 class="section-title">
+                Upgrade Subscription
+            </h2>
+
+            <p class="section-subtitle">
+                Increase API request limits
+            </p>
+
+            <a href="/plans">
+
+                <button class="generate-btn">
+
+                    View Plans
+
+                </button>
+
+            </a>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

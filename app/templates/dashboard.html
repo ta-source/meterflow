@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MeterFlow Dashboard</title>
+
+    <link rel="stylesheet"
+          href="/static/style.css?v=6">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo-box">
+            ⚡
+        </div>
+
+        <h1 class="logo">
+            MeterFlow
+        </h1>
+
+        <p class="subtitle">
+            API Analytics
+        </p>
+
+        <nav class="nav-links">
+
+            <a href="/dashboard"
+               class="active">
+                📊 Overview
+            </a>
+
+            <a href="/api-keys">
+                🔑 API Keys
+            </a>
+
+            <a href="/logs">
+                📜 Logs
+            </a>
+
+            <a href="/billing">
+                💳 Billing
+            </a>
+
+            <a href="/playground">
+                API Playground
+            </a>
+
+            <a href="/plans">
+                💎 Plans
+            </a>
+
+            <a href="/logout">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Overview
+                </h1>
+
+                <p class="page-subtitle">
+                    Welcome to MeterFlow dashboard
+                </p>
+
+            </div>
+
+            <form action="/generate-api-key"
+                  method="POST">
+
+                <button class="generate-btn">
+                    + Generate API Key
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+            <div class="card">
+
+                <div class="card-value">
+                    {{ total_requests }}
+                </div>
+
+                <div class="card-label">
+                    Total Requests
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-value">
+                    {{ api_keys|length }}
+                </div>
+
+                <div class="card-label">
+                    Active API Keys
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-value">
+                    {{ total_units }}
+                </div>
+
+                <div class="card-label">
+                    Total Units
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-value">
+                    ₹{{ revenue }}
+                </div>
+
+                <div class="card-label">
+                    Revenue
+                </div>
+
+            </div>
+
+            <!-- CURRENT PLAN -->
+
+            <div class="card">
+
+                <div class="card-value">
+                    {{ billing.plan if billing else 'Free' }}
+                </div>
+
+                <div class="card-label">
+                    Current Plan
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT GRID -->
+
+        <div class="content-grid">
+
+            <!-- CHART -->
+
+            <div class="section-card">
+
+                <h2 class="section-title">
+                    Usage Analytics
+                </h2>
+
+                <p class="section-subtitle">
+                    Meter consumption overview
+                </p>
+
+                <div class="chart-container">
+
+                    <canvas id="usageChart"></canvas>
+
+                </div>
+
+            </div>
+
+            <!-- ENDPOINTS -->
+
+            <div class="section-card">
+
+                <h2 class="section-title">
+                    Top Endpoints
+                </h2>
+
+                <p class="section-subtitle">
+                    By request volume
+                </p>
+
+                <div class="endpoint">
+
+                    <div class="endpoint-name">
+                        /api/data
+                    </div>
+
+                    <div class="progress">
+
+                        <div class="progress-fill"
+                             style="width:92%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="endpoint">
+
+                    <div class="endpoint-name">
+                        /api/readings
+                    </div>
+
+                    <div class="progress">
+
+                        <div class="progress-fill"
+                             style="width:70%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="endpoint">
+
+                    <div class="endpoint-name">
+                        /api/billing
+                    </div>
+
+                    <div class="progress">
+
+                        <div class="progress-fill"
+                             style="width:50%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CREATE API -->
+
+        <div class="section-card">
+
+            <h2 class="section-title">
+                Create API
+            </h2>
+
+            <p class="section-subtitle">
+                Add dynamic gateway APIs
+            </p>
+
+            <form action="/create-api"
+                  method="POST"
+                  class="reading-form">
+
+                <input type="text"
+                       name="name"
+                       placeholder="API Name"
+                       required>
+
+                <input type="text"
+                       name="route"
+                       placeholder="Route Name (example: todo)"
+                       required>
+
+                <input type="text"
+                       name="upstream_url"
+                       placeholder="https://example.com/api"
+                       required>
+
+                <button type="submit">
+                    Create API
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- YOUR APIs -->
+
+        <div class="section-card">
+
+            <h2 class="section-title">
+                Your APIs
+            </h2>
+
+            <p class="section-subtitle">
+                Dynamic Gateway APIs
+            </p>
+
+            <table style="width:100%; margin-top:20px;">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>Route</th>
+
+                        <th>Gateway URL</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for api in apis %}
+
+                    <tr>
+
+                        <td>{{ api.name }}</td>
+
+                        <td>{{ api.route }}</td>
+
+                        <td>
+                            /gateway/{{ api.route }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ADD READING -->
+
+        <div class="section-card">
+
+            <h2 class="section-title">
+                Add Meter Reading
+            </h2>
+
+            <p class="section-subtitle">
+                Submit new electricity usage
+            </p>
+
+            <form action="/add-reading"
+                  method="POST"
+                  class="reading-form">
+
+                <input type="date"
+                       name="reading_date"
+                       required>
+
+                <input type="number"
+                       step="0.01"
+                       name="units"
+                       placeholder="Enter Units"
+                       required>
+
+                <button type="submit">
+                    Add Reading
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- RECENT READINGS -->
+
+        <div class="section-card">
+
+            <h2 class="section-title">
+                Recent Readings
+            </h2>
+
+            <p class="section-subtitle">
+                Latest meter entries
+            </p>
+
+            {% for reading in readings %}
+
+            <div class="list-item">
+
+                <div>
+
+                    <strong>
+                        {{ reading.reading_date }}
+                    </strong>
+
+                    —
+                    {{ reading.units }} Units
+
+                </div>
+
+                <form action="/delete-reading/{{ reading.id }}"
+                      method="POST">
+
+                    <button class="delete-btn">
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- HIDDEN CHART DATA -->
+
+<div id="chart-data"
+
+     data-labels='{{ labels | tojson | safe }}'
+
+     data-values='{{ values | tojson | safe }}'>
+
+</div>
+
+<!-- CHART JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- CHART SCRIPT -->
+
+<script>
+
+const chartData =
+    document.getElementById(
+        "chart-data"
+    );
+
+const labels =
+    JSON.parse(
+        chartData.dataset.labels
+    );
+
+const values =
+    JSON.parse(
+        chartData.dataset.values
+    );
+
+const ctx =
+    document.getElementById(
+        'usageChart'
+    );
+
+new Chart(ctx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: labels,
+
+        datasets: [
+
+            {
+
+                label: 'Meter Usage',
+
+                data: values,
+
+                borderColor: '#22d3ee',
+
+                backgroundColor:
+                    'rgba(34,211,238,0.2)',
+
+                tension: 0.4,
+
+                fill: true,
+
+                borderWidth: 3,
+
+                pointBackgroundColor:
+                    '#22d3ee',
+
+                pointBorderColor:
+                    '#ffffff',
+
+                pointRadius: 5
+
+            }
+
+        ]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                labels: {
+
+                    color: 'white'
+
+                }
+
+            }
+
+        },
+
+        scales: {
+
+            x: {
+
+                ticks: {
+
+                    color: 'white'
+
+                }
+
+            },
+
+            y: {
+
+                ticks: {
+
+                    color: 'white'
+
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

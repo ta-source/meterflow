@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup - MeterFlow</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1 class="auth-title">
+            Create Account
+        </h1>
+
+        <p class="auth-subtitle">
+            Create your MeterFlow account
+        </p>
+
+        <form
+            action="/signup"
+            method="post"
+            class="auth-form"
+        >
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter name"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter email"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="auth-link">
+            Already have an account?
+            <a href="/login">
+                Login
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

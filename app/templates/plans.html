@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MeterFlow Plans</title>
+
+    <link rel="stylesheet"
+          href="/static/style.css?v=6">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo-box">
+            ⚡
+        </div>
+
+        <h1 class="logo">
+            MeterFlow
+        </h1>
+
+        <p class="subtitle">
+            API Analytics
+        </p>
+
+        <nav class="nav-links">
+
+            <a href="/dashboard">
+                📊 Overview
+            </a>
+
+            <a href="/api-keys">
+                🔑 API Keys
+            </a>
+
+            <a href="/logs">
+                📜 Logs
+            </a>
+
+            <a href="/billing">
+                💳 Billing
+            </a>
+
+            <a href="/playground">
+                API Playground
+            </a>
+
+            <a href="/plans"
+               class="active">
+                💎 Plans
+            </a>
+
+            <a href="/logout">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Subscription Plans
+                </h1>
+
+                <p class="page-subtitle">
+                    Upgrade your MeterFlow API limits
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- PLANS -->
+
+        <div class="stats-grid">
+
+            <!-- FREE PLAN -->
+
+            <div class="card">
+
+                <h2 style="margin-bottom:20px;">
+                    Free
+                </h2>
+
+                <div class="card-value">
+                    ₹0
+                </div>
+
+                <div class="card-label">
+                    5 Requests
+                </div>
+
+                <br>
+
+                <form action="/upgrade-plan"
+                      method="POST">
+
+                    <input type="hidden"
+                           name="plan"
+                           value="Free">
+
+                    <button class="generate-btn"
+                            type="submit">
+
+                        Activate
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- STARTER PLAN -->
+
+            <div class="card">
+
+                <h2 style="margin-bottom:20px;">
+                    Starter
+                </h2>
+
+                <div class="card-value">
+                    ₹199
+                </div>
+
+                <div class="card-label">
+                    100 Requests
+                </div>
+
+                <br>
+
+                <button class="generate-btn"
+                        onclick="payNow(199, 'Starter')">
+
+                    Upgrade
+
+                </button>
+
+            </div>
+
+            <!-- PRO PLAN -->
+
+            <div class="card">
+
+                <h2 style="margin-bottom:20px;">
+                    Pro
+                </h2>
+
+                <div class="card-value">
+                    ₹499
+                </div>
+
+                <div class="card-label">
+                    Unlimited Requests
+                </div>
+
+                <br>
+
+                <button class="generate-btn"
+                        onclick="payNow(499, 'Pro')">
+
+                    Upgrade
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- CURRENT PLAN -->
+
+        <div class="section-card"
+             style="margin-top:40px;">
+
+            <h2 class="section-title">
+                Current Subscription
+            </h2>
+
+            <p class="section-subtitle">
+                Your active MeterFlow plan
+            </p>
+
+            <div class="list-item">
+
+                <div>
+
+                    <strong>
+                        Active Plan:
+                    </strong>
+
+                    {{ billing.plan if billing else 'Free' }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- RAZORPAY -->
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<!-- PAYMENT SCRIPT -->
+
+<script>
+
+async function payNow(amount, plan) {
+
+    try {
+
+        // CREATE ORDER
+
+        const response = await fetch(
+            `/create-payment/${amount}`,
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        console.log(data);
+
+        // RAZORPAY OPTIONS
+
+        const options = {
+
+            key: "{{ razorpay_key_id }}",
+
+            amount: data.amount,
+
+            currency: "INR",
+
+            name: "MeterFlow",
+
+            description: plan + " Plan",
+
+            order_id: data.order_id,
+
+            handler: async function(response) {
+
+                alert(
+                    "Payment Successful"
+                );
+
+                // ACTIVATE PLAN
+
+                const formData = new FormData();
+
+                formData.append(
+                    "plan",
+                    plan
+                );
+
+                await fetch(
+                    "/upgrade-plan",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                alert(
+                    plan + " Plan Activated"
+                );
+
+                // REDIRECT
+
+                window.location.href =
+                    "/billing";
+            },
+
+            theme: {
+
+                color: "#22d3ee"
+            }
+        };
+
+        // OPEN PAYMENT
+
+        const rzp =
+            new Razorpay(options);
+
+        rzp.open();
+
+    }
+
+    catch(error) {
+
+        console.log(error);
+
+        alert(
+            "Payment Failed"
+        );
+    }
+}
+
+</script>
+
+</body>
+</html>

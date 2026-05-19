@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page">
+
+    <h1>Meter Readings</h1>
+
+    <div class="card">
+
+        {% for reading in readings %}
+
+        <div class="reading-item">
+            {{ reading.date }} — {{ reading.value }}
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
