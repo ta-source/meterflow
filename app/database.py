@@ -1,18 +1,28 @@
-import os
-
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL.startswith("postgresql://"):
+# LOCAL FALLBACK
+if not DATABASE_URL:
+    DATABASE_URL = "sqlite:///./meterflow.db"
+
+# RENDER FIX
+if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace(
+        "postgres://",
         "postgresql://",
-        "postgresql+psycopg2://",
         1
     )
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False}
+    if "sqlite" in DATABASE_URL
+    else {}
+)
 
 SessionLocal = sessionmaker(
     autocommit=False,
